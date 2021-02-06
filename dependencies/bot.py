@@ -1,8 +1,8 @@
-from discord.ext import commands
 import datetime
 import humanize
+from discord.ext import commands
 
-class CalanderBot(commands.Bot):
+class CalendarBot(commands.Bot):
 
     def __init__(self, *args, **kwargs):
         self._uptime = datetime.datetime.utcnow()
@@ -10,4 +10,4 @@ class CalanderBot(commands.Bot):
 
     @property
     async def uptime(self):
-        return humanize.naturaldelta(datetime.datetime.utcnow()-self._uptime)
+        return humanize.naturaldelta(datetime.datetime.utcnow() - self._uptime)
