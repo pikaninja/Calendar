@@ -12,11 +12,14 @@ if __name__ == "__main__":
     intents = discord.Intents.default()
     intents.members = True
 
+    cache = discord.MemberCacheFlags.from_intents(intents)
+
     bot = CalendarBot(
         command_prefix="cb/",
         description=description,
         allowed_mentions=allowed_mentions,
         intents=intents,
+        member_cache_flags=cache,
         activity=discord.Game(name="Watching time pass by."),
         status=discord.Status.idle,
         owner_ids={668906205799907348, 678401615333556277, 671777334906454026}
