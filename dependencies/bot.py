@@ -11,3 +11,6 @@ class CalendarBot(commands.Bot):
     @property
     async def uptime(self):
         return humanize.naturaldelta(datetime.datetime.utcnow() - self._uptime)
+
+    async def on_ready(self):
+        print("Calander Bot is starting!")
