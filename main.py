@@ -9,8 +9,7 @@ if __name__ == "__main__":
     allowed_mentions.roles = False
     allowed_mentions.everyone = False
 
-    intents = discord.Intents.default()
-    intents.members = True
+    intents = discord.Intents.all()
 
     cache = discord.MemberCacheFlags.from_intents(intents)
 
