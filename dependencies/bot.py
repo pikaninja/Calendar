@@ -13,4 +13,5 @@ class CalendarBot(commands.Bot):
         return humanize.naturaldelta(datetime.datetime.utcnow() - self._uptime)
 
     async def on_ready(self):
-        print("Calander Bot is starting!")
+        print(f"Calander Bot is starting!\nLogged in as: {self.user}")
+
