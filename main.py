@@ -1,6 +1,6 @@
 import discord
 from dependencies import CalendarBot
-
+from config import token, owner_ids
 
 if __name__ == "__main__":
     description = "A simple bot to view and use a calendar in discord."
@@ -22,8 +22,8 @@ if __name__ == "__main__":
         member_cache_flags=cache,
         activity=discord.Game(name="Watching time pass by."),
         status=discord.Status.idle,
-        owner_ids={668906205799907348, 678401615333556277, 671777334906454026}
+        owner_ids=owner_ids
     )
 
-    bot.run(...) # Token from a config file of some sorts will be here.
-    
+    bot.run(token)
+
