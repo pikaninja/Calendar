@@ -1,4 +1,5 @@
 TOKEN = "token"
+PREFIX = "cb/"
 OWNER_IDS = [1, 2, 3]
 
 [database]
@@ -7,3 +8,8 @@ host = "ip here"
 database = "db name"
 password = "password"
 user = "username"
+
+[jishaku]
+# optional - all flags defined here are set by the bot
+JISHAKU_NO_UNDERSCORE = true
+JISHAKU_NO_DM_TRACEBACK = true

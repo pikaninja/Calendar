@@ -4,9 +4,7 @@ from dependencies import CalendarBot
 if __name__ == "__main__":
     description = "A simple bot to view and use a calendar in discord."
 
-    allowed_mentions = discord.AllowedMentions()
-    allowed_mentions.roles = False
-    allowed_mentions.everyone = False
+    allowed_mentions = discord.AllowedMentions(roles=False, everyone=False)
 
     intents = discord.Intents.all()
 
@@ -18,14 +16,12 @@ if __name__ == "__main__":
     )
 
     bot = CalendarBot(
-        command_prefix="cb/",
         description=description,
         allowed_mentions=allowed_mentions,
         intents=intents,
         member_cache_flags=cache,
         activity=activity,
-        status=discord.Status.idle,
+        status=discord.Status.idle
     )
-    bot.owner_ids = set(bot.config["owner_ids"])
 
-    bot.run(bot.config["token"])
+    bot.run(bot.config["TOKEN"])
