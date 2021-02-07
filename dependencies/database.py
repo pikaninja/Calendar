@@ -43,7 +43,7 @@ class Database:
 
                 CREATE TABLE IF NOT EXISTS reminders(
                     id SERIAL PRIMARY KEY,
-                    member_id SERIAL NOT NULL,
+                    member_id BIGINT NOT NULL,
                     timestamp TIMESTAMP NOT NULL,
                     event VARCHAR(1000)
                 );

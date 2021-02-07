@@ -1,0 +1,8 @@
+token = "token"
+owner_ids = [1, 2, 3]
+
+[database]
+host = "ip here"
+database = "db name"
+password = "password"
+user = "username"
