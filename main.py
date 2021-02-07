@@ -26,7 +26,7 @@ if __name__ == "__main__":
         member_cache_flags=cache,
         activity=activity,
         status=discord.Status.idle,
-        owner_ids=owner_ids
     )
+    bot.owner_ids = set(bot.config["owner_ids"])
 
-    bot.run(token)
+    bot.run(bot.config["token"])

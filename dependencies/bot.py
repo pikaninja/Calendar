@@ -1,15 +1,18 @@
+import toml
 import datetime
 import humanize
 from discord.ext import commands
-
 from . import database
 
 
 class CalendarBot(commands.Bot):
 
     def __init__(self, *args, **kwargs):
+        with open("config.toml") as fh:
+            self.config = toml.loads(fh.read())
+
         self._uptime = datetime.datetime.utcnow()
-        self.db = database.create(user="postgres", password="root")
+        self.db = database.create(**self.config["database"])
 
         print("Calendar Bot is starting!")
         super().__init__(*args, **kwargs)
