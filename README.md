@@ -33,7 +33,8 @@ user = "calendarbot" # Also created above
 [jishaku]
 # optional - all flags defined here are set by the bot
 JISHAKU_NO_UNDERSCORE = true
-JISHAKU_NO_DM_TRACEBACK = true```
+JISHAKU_NO_DM_TRACEBACK = true
+```
 **5.** Running the bot
 To run our bot now, all we have to do is
 ```sh
