@@ -1,6 +1,5 @@
 import discord
 from dependencies import CalendarBot
-from config import token, owner_ids
 
 if __name__ == "__main__":
     description = "A simple bot to view and use a calendar in discord."
