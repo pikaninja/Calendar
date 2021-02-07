@@ -1,5 +1,5 @@
-token = "token"
-owner_ids = [1, 2, 3]
+TOKEN = "token"
+OWNER_IDS = [1, 2, 3]
 
 [database]
 # all options defined here are passed to asyncpg.create_pool
