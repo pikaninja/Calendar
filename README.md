@@ -2,6 +2,7 @@
 A simple bot to view and use a calendar in discord. This is a work in progress!
 # Installation
 **1.** Python 3.9 and PostgreSQL is required to run this bot installation [here](https://www.python.org/) and [here](https://www.postgresql.org/)
+
 **2.** Get the code and install the requirements
 ```sh
 git clone https://github.com/pikaninja/Calendar.git
