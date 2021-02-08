@@ -13,7 +13,7 @@ pip install -U requirements.txt
 ```
 **3.** Set up PostgreSQL
 
-Inside the postgres command prompt, `psql`, tupe
+Inside the postgres command prompt, `psql`, type
 ```sql
 CREATE ROLE calendarbot WITH LOGIN PASSWORD 'password';
 CREATE DATABASE calendar OWNER calendarbot;
