@@ -11,12 +11,14 @@ Then navigate to the directory created and install the requirements
 pip install -U requirements.txt
 ```
 **3.** Set up PostgreSQL
+
 Inside the postgres command prompt, `psql`, tupe
 ```sql
 CREATE ROLE calendarbot WITH LOGIN PASSWORD 'password';
 CREATE DATABASE calendar OWNER calendarbot;
 ```
 **4.** Creating the config file
+
 First copy the sample config file into a new file, `config.toml`
 ```toml
 TOKEN = "token" # Your bot's token
