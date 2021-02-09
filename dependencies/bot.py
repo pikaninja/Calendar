@@ -1,3 +1,4 @@
+import discord
 import datetime
 import humanize
 import importlib
@@ -45,6 +46,16 @@ class CalendarBot(commands.Bot):
                 os.environ[flag] = str(value)
             self.load_extension("jishaku")
         print(message)
+
+    def embed(self, ctx = None, **kwargs):
+        kwargs.setdefault("colour", 0xF35B63)
+        kwargs.setdefault("timestamp", datetime.datetime.utcnow())
+        embed = discord.Embed(**kwargs)
+
+        if ctx:
+            embed.set_footer(text = f"Requested by {ctx.author}", icon_url = ctx.author.avatar_url)
+
+        return embed
 
     async def on_ready(self):
         print(f"\nLogged in as: {self.user}")

@@ -17,7 +17,7 @@ class Misc(commands.Cog):
 
         names = [str(self.bot.get_user(uid)) for uid in self.bot.owner_ids]
 
-        embed = discord.Embed(colour=0xF35B63)
+        embed = self.bot.embed(ctx)
         embed.title = ", ".join(names)
         embed.set_thumbnail(url=str(ctx.me.avatar_url))
 
