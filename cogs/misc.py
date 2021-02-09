@@ -11,7 +11,7 @@ class Misc(commands.Cog):
         self.bot: dependencies.CalendarBot = bot
         self.process = psutil.Process()
 
-    @commands.command()
+    @commands.command(aliases=["info"])
     async def about(self, ctx: commands.Context):
         """Gives some information about the bot."""
 
