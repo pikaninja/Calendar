@@ -6,6 +6,7 @@ import os
 import toml
 from . import database
 from discord.ext import commands
+from .context import Context
 
 initial_extensions = ("cogs.misc",)
 
@@ -33,6 +34,9 @@ class CalendarBot(commands.Bot):
     @property
     def uptime(self):
         return humanize.naturaldelta(datetime.datetime.utcnow() - self._uptime)
+
+    async def get_context(self, message, *, cls=None):
+        return await super().get_context(message, cls=cls or Context)
 
     def _handle_jishaku(self):
         message = "Jishaku not found, ignoring flags..."

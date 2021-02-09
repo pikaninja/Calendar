@@ -2,7 +2,7 @@ import psutil
 import discord
 import dependencies
 from discord.ext import commands
-
+from dependencies import Context
 
 class Misc(commands.Cog):
     """Miscellaneous commands, these part ways from the main objective of the bot."""
@@ -12,7 +12,7 @@ class Misc(commands.Cog):
         self.process = psutil.Process()
 
     @commands.command(aliases=["info"])
-    async def about(self, ctx: commands.Context):
+    async def about(self, ctx: Context):
         """Gives some information about the bot."""
 
         names = [str(self.bot.get_user(uid)) for uid in self.bot.owner_ids]
