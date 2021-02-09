@@ -5,6 +5,8 @@ from discord.ext import commands
 
 
 class Misc(commands.Cog):
+    """Miscellaneous commands, these part ways from the main objective of the bot."""
+
     def __init__(self, bot: dependencies.CalendarBot):
         self.bot: dependencies.CalendarBot = bot
         self.process = psutil.Process()
