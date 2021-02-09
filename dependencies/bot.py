@@ -6,6 +6,8 @@ import toml
 from . import database
 from discord.ext import commands
 
+initial_extensions = ("cogs.misc",)
+
 
 class CalendarBot(commands.Bot):
 
@@ -23,6 +25,9 @@ class CalendarBot(commands.Bot):
 
         super().__init__(*args, **kwargs)
         self._handle_jishaku()
+
+        for ext in initial_extensions:
+            self.load_extension(ext)
 
     @property
     def uptime(self):
