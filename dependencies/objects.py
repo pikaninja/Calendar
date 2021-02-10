@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional
+from typing import Optional, List
 
 
 class Reminder:
@@ -20,3 +20,12 @@ class Reminder:
     @property
     def diff(self):
         return self.timestamp - datetime.datetime.now()
+
+
+class MemberProxy:
+    def __init__(self, _id: int, groups: Optional[List[int]]):
+        self.id = _id
+        self.groups: Optional[List[int]] = None
+
+        if groups:
+            self.groups = groups
