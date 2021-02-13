@@ -1,8 +1,17 @@
 from discord.ext import commands
 
 
-class TimeNotParsed(commands.CommandError):
-    """Gets raised whenever a time being parsed has failed."""
+class CalendarException(Exception):
+    pass
 
-    def __init__(self, message: str, *args):
-        super().__init__(message, *args)
+
+class TimeNotParsed(CalendarException):
+    """Gets raised whenever a time being parsed has failed."""
+    pass
+
+
+class DuplicateGroup(commands.CommandError):
+    """
+    Raised when an attempt to create an already existing group is made
+    """
+    pass
