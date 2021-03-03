@@ -6,7 +6,7 @@ from typing import Any, Coroutine, Dict, List, Optional, Tuple
 import asyncpg
 from asyncpg.pool import Pool
 
-from .objects import MemberProxy, Reminder, Settings
+from .objects import Container, MemberProxy, Reminder, Settings
 from utils.errors import DuplicateGroup
 
 
@@ -38,8 +38,8 @@ class Database:
             self.pool = await asyncpg.create_pool(**self.config)
         self.groups = []
         self.members = {}
-        self.settings = {"groups": {}}
-        self.reminders = {"groups": {}}
+        self.settings = Container()
+        self.reminders = Container()
 
         async with self.pool.acquire() as conn:
             await conn.execute("""
@@ -91,20 +91,20 @@ class Database:
 
         for _id, member_id, group_id, *args in settings:
             select_id = member_id
-            which = self.settings
+            which = self.settings.users
 
             if not member_id:
                 select_id = group_id
-                which = self.settings["groups"]
+                which = self.settings.groups
             which[select_id] = Settings(_id, select_id, *args)
 
         for _id, member_id, group_id, *args in reminders:
             select_id = member_id
-            which = self.reminders
+            which = self.reminders.users
 
             if not member_id:
                 select_id = group_id
-                which = self.reminders["groups"]
+                which = self.reminders.groups
             reminders_obj = which.setdefault(select_id, [])
             index = len(reminders_obj)
             obj = Reminder(_id, index, *args)

@@ -1,5 +1,8 @@
 import datetime
+from collections import namedtuple
 from typing import Dict, Iterable, Optional
+
+Container = namedtuple("Container", "users groups", defaults=[dict(), dict()])
 
 
 class Reminder:
