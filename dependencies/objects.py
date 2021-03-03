@@ -40,10 +40,24 @@ class Reminder:
 
 
 class MemberProxy:
-    def __init__(self, row_id: int, _id: int, groups: Optional[Dict[int, Iterable[int]]]):
+    def __init__(self,
+                 row_id: int,
+                 _id: int,
+                 groups: Optional[Dict[int, Iterable[int]]]):
         self.row_id = row_id
         self.id = _id
         self.groups = None
 
         if groups:
             self.groups = groups
+
+
+class Settings:
+    KEYS = ("offset", "dark_mode")
+
+    def __init__(self, row_id: int, _id: int, *settings):
+        self.row_id = row_id
+        self.id = _id
+
+        for key, value in zip(self.KEYS, settings):
+            setattr(self, key, value)

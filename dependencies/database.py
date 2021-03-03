@@ -1,12 +1,12 @@
 import asyncio
 import datetime
 import functools
-from typing import Coroutine, Dict, List, Optional, Set, Tuple
+from typing import Any, Coroutine, Dict, List, Optional, Tuple
 
 import asyncpg
 from asyncpg.pool import Pool
 
-from .objects import MemberProxy, Reminder
+from .objects import MemberProxy, Reminder, Settings
 from utils.errors import DuplicateGroup
 
 
@@ -25,9 +25,10 @@ class Database:
 
         self._loaded = asyncio.Event()
         self.pool: Pool = None
-        self.groups: Dict[int, Tuple[int]] = []
-        self.members: Dict[int, int] = {}
-        self.reminders: Dict[int, List[Reminder]] = {"_groups": {}}
+        self.groups: Dict[int, Tuple[int]] = None
+        self.members: Dict[int, int] = None
+        self.settings: Dict[int, Dict[str, Any]] = None
+        self.reminders: Dict[int, List[Reminder]] = None
         self.loop = asyncio.get_event_loop()
 
         self.loop.create_task(self.__ainit__())
@@ -35,20 +36,34 @@ class Database:
     async def __ainit__(self):
         if not self.pool:
             self.pool = await asyncpg.create_pool(**self.config)
+        self.groups = []
+        self.members = {}
+        self.settings = {"groups": {}}
+        self.reminders = {"groups": {}}
 
         async with self.pool.acquire() as conn:
             await conn.execute("""
-                CREATE TABLE IF NOT EXISTS groups(
+                CREATE SCHEMA calendar;
+
+                CREATE TABLE IF NOT EXISTS calendar.groups(
                     id SERIAL PRIMARY KEY,
                     member_ids BIGINT[10] NOT NULL
                 );
 
-                CREATE TABLE IF NOT EXISTS members(
+                CREATE TABLE IF NOT EXISTS calendar.members(
                     id SERIAL PRIMARY KEY,
                     member_id BIGINT UNIQUE NOT NULL
                 );
 
-                CREATE TABLE IF NOT EXISTS reminders(
+                CREATE TABLE IF NOT EXISTS calendar.settings(
+                    id SERIAL PRIMARY KEY,
+                    member_id BIGINT,
+                    group_id BIGINT,
+                    utc_offset SMALLINT DEFAULT 0,
+                    dark_mode BOOLEAN DEFAULT FALSE
+                );
+
+                CREATE TABLE IF NOT EXISTS calendar.reminders(
                     id SERIAL PRIMARY KEY,
                     member_id BIGINT,
                     group_id BIGINT,
@@ -57,30 +72,44 @@ class Database:
                 );
             """)
 
-            groups = await conn.fetch("SELECT * FROM groups;")
-            members = await conn.fetch("SELECT * FROM members;")
-            reminders = await conn.fetch("SELECT * FROM reminders;")
-
-            for _id, member_ids in groups:
-                self.groups[_id] = set(member_ids)
-
-            for _id, member_id in members:
-                groups = self.find_groups(member_id)
-                self.members[member_id] = MemberProxy(_id, member_id, groups)
-
-            for _id, member_id, group_id, *args in reminders:
-                select_id = member_id
-                which = self.reminders
-
-                if not member_id:
-                    select_id = group_id
-                    which = self.reminders["_groups"]
-                reminders_obj = which.setdefault(select_id, [])
-                index = len(reminders_obj)
-                obj = Reminder(_id, index, *args)
-
-                reminders_obj.append(obj)
+            await self._init_cache(conn)
         self._loaded.set()
+
+    async def _init_cache(self, conn):
+        # have mercy on my soul
+        groups = await conn.fetch("SELECT * FROM calendar.groups;")
+        members = await conn.fetch("SELECT * FROM calendar.members;")
+        settings = await conn.fetch("SELECT * FROM calendar.settings;")
+        reminders = await conn.fetch("SELECT * FROM calendar.reminders;")
+
+        for _id, member_ids in groups:
+            self.groups[_id] = set(member_ids)
+
+        for _id, member_id in members:
+            groups = self.find_groups(member_id)
+            self.members[member_id] = MemberProxy(_id, member_id, groups)
+
+        for _id, member_id, group_id, *args in settings:
+            select_id = member_id
+            which = self.settings
+
+            if not member_id:
+                select_id = group_id
+                which = self.settings["groups"]
+            which[select_id] = Settings(_id, select_id, *args)
+
+        for _id, member_id, group_id, *args in reminders:
+            select_id = member_id
+            which = self.reminders
+
+            if not member_id:
+                select_id = group_id
+                which = self.reminders["groups"]
+            reminders_obj = which.setdefault(select_id, [])
+            index = len(reminders_obj)
+            obj = Reminder(_id, index, *args)
+
+            reminders_obj.append(obj)
 
     def _get_next_index(self,
                         *, member_id: Optional[int] = None,
@@ -179,12 +208,6 @@ class Database:
 
         await conn.execute("DELETE FROM reminders WHERE id=$1;", reminder.id)
         return reminder
-
-    @connect
-    async def drop(self, conn):
-        self._loaded.clear()
-        await conn.execute("DROP TABLE members, reminders;")
-        await self.loop.create_task(self.__ainit__())
 
 
 def create(**config):
